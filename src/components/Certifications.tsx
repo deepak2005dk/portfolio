@@ -1,8 +1,23 @@
-import { Award, Trophy, Presentation } from 'lucide-react';
+import { Award, Trophy, Presentation, Briefcase, ExternalLink } from 'lucide-react';
 import Section from '@/components/Section';
 import SectionHeading from '@/components/SectionHeading';
 
-const ITEMS = [
+type BaseItem = {
+  title: string;
+  issuer: string;
+  year: string;
+  detail: string;
+  icon: typeof Award;
+};
+
+type CertItem = BaseItem & {
+  image: string;
+  duration: string;
+  certId: string;
+  pdfUrl: string;
+};
+
+const REGULAR_ITEMS: BaseItem[] = [
   {
     title: 'Data Analyst Certification',
     issuer: 'Qspider Institute, Chennai',
@@ -17,6 +32,21 @@ const ITEMS = [
     detail: 'Competitive quality-focused programming challenge',
     icon: Trophy,
   },
+];
+
+const CERT_ITEM: CertItem = {
+  title: 'Internship Experience — Data Analytics',
+  issuer: 'Infyntrek Systèmes',
+  year: '2026',
+  detail: 'Hands-on data analytics internship',
+  icon: Briefcase,
+  image: '/assets/infyntrek-certificate.png',
+  duration: '25 June 2026 – 25 August 2026',
+  certId: '7855EA46A8E88413',
+  pdfUrl: '/assets/infyntrek-certificate.pdf',
+};
+
+const TRAILING_ITEMS: BaseItem[] = [
   {
     title: 'Paper Presentation: "Blockchain-Powered Voting"',
     issuer: 'National Level Technical Symposium, R P Sarathy Institute of Technology',
@@ -25,6 +55,73 @@ const ITEMS = [
     icon: Presentation,
   },
 ];
+
+function RegularCard({ item }: { item: BaseItem }) {
+  const Icon = item.icon;
+  return (
+    <div className="group rounded-2xl bg-navy-800/50 border border-white/10 p-6 hover:-translate-y-1 hover:border-accent-500/40 transition-all">
+      <div className="flex items-center justify-between mb-4">
+        <span className="grid place-items-center w-11 h-11 rounded-xl bg-accent-500/15 text-accent-400 group-hover:bg-accent-500 group-hover:text-white transition-colors">
+          <Icon size={22} />
+        </span>
+        <span className="font-mono text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">
+          {item.year}
+        </span>
+      </div>
+      <h3 className="font-semibold text-white leading-snug">{item.title}</h3>
+      <p className="text-sm text-slate-400 mt-1.5">{item.issuer}</p>
+      <p className="text-sm text-accent-300/80 mt-3 font-mono">{item.detail}</p>
+    </div>
+  );
+}
+
+function CertificateCard({ item }: { item: CertItem }) {
+  const Icon = item.icon;
+  return (
+    <div className="group rounded-2xl bg-navy-800/50 border border-white/10 p-6 hover:-translate-y-1 hover:border-accent-500/40 transition-all">
+      <a
+        href={item.pdfUrl}
+        target="_blank"
+        rel="noopener"
+        className="block rounded-xl overflow-hidden border border-white/10 mb-4 group-hover:border-accent-500/30 transition-colors"
+      >
+        <img
+          src={item.image}
+          alt={item.title}
+          className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+        />
+      </a>
+
+      <div className="flex items-center justify-between mb-4">
+        <span className="grid place-items-center w-11 h-11 rounded-xl bg-accent-500/15 text-accent-400 group-hover:bg-accent-500 group-hover:text-white transition-colors">
+          <Icon size={22} />
+        </span>
+        <span className="font-mono text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">
+          {item.year}
+        </span>
+      </div>
+
+      <h3 className="font-semibold text-white leading-snug">{item.title}</h3>
+      <p className="text-sm text-slate-400 mt-1.5">{item.issuer}</p>
+      <p className="text-sm text-accent-300/80 mt-3 font-mono">{item.duration}</p>
+
+      <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between gap-3">
+        <span className="font-mono text-xs text-slate-500 truncate">
+          ID: {item.certId}
+        </span>
+        <a
+          href={item.pdfUrl}
+          target="_blank"
+          rel="noopener"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-accent-400 hover:text-accent-300 transition-colors shrink-0"
+        >
+          View Certificate
+          <ExternalLink size={14} />
+        </a>
+      </div>
+    </div>
+  );
+}
 
 export default function Certifications() {
   return (
@@ -36,27 +133,13 @@ export default function Certifications() {
           icon={<Award size={16} />}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {ITEMS.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.title}
-                className="group rounded-2xl bg-navy-800/50 border border-white/10 p-6 hover:-translate-y-1 hover:border-accent-500/40 transition-all"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="grid place-items-center w-11 h-11 rounded-xl bg-accent-500/15 text-accent-400 group-hover:bg-accent-500 group-hover:text-white transition-colors">
-                    <Icon size={22} />
-                  </span>
-                  <span className="font-mono text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">
-                    {item.year}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-white leading-snug">{item.title}</h3>
-                <p className="text-sm text-slate-400 mt-1.5">{item.issuer}</p>
-                <p className="text-sm text-accent-300/80 mt-3 font-mono">{item.detail}</p>
-              </div>
-            );
-          })}
+          {REGULAR_ITEMS.map((item) => (
+            <RegularCard key={item.title} item={item} />
+          ))}
+          <CertificateCard key={CERT_ITEM.title} item={CERT_ITEM} />
+          {TRAILING_ITEMS.map((item) => (
+            <RegularCard key={item.title} item={item} />
+          ))}
         </div>
       </div>
     </Section>
