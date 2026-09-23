@@ -12,6 +12,7 @@ type BaseItem = {
 };
 
 type CertItem = BaseItem & {
+  image: string;
   duration: string;
   certId: string;
   pdfUrl: string;
@@ -41,6 +42,7 @@ const CERT_ITEM: CertItem = {
   year: '2026',
   detail: 'Hands-on data analytics internship',
   icon: Briefcase,
+  image: '/infyntrek-certificate.png',
   duration: '25 June 2026 – 25 August 2026',
   certId: '7855EA46A8E88413',
   pdfUrl: '/infyntrek-certificate.pdf',
@@ -160,10 +162,10 @@ function CertificateCard({
         className="block w-full rounded-xl overflow-hidden border border-white/10 mb-4 group-hover:border-accent-500/30 transition-colors"
         aria-label={`View ${item.title} certificate`}
       >
-        <iframe
-          src={item.pdfUrl}
-          title={`${item.title} preview`}
-          className="w-full aspect-[4/3] pointer-events-none bg-white"
+        <img
+          src={item.image}
+          alt={item.title}
+          className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-[1.02]"
         />
       </button>
 
